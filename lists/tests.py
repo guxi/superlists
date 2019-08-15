@@ -2,6 +2,7 @@ from django.test import TestCase
 from django.urls import resolve
 from lists.views import home_page
 from django.http import HttpRequest
+from django.template.loader import render_to_string
 
 
 # =============================================================================
@@ -18,8 +19,10 @@ class HomePageTest(TestCase):
     def test_hompage_return_correct_html(self):
         request=HttpRequest()
         response=home_page(request)
-        a=response.content
-        print(a)
+        expected_html=render_to_string('home.html')
+        self.assertEqual(response.content.decode(),expected_html)
+#        a=response.content
+#        print(a)
         self.assertTrue(response.content.startswith(b'<html>'))
         self.assertIn(b'<title>to-do</title>', response.content)
         self.assertTrue(response.content.endswith(b'</html>'))
